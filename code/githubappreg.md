@@ -1,136 +1,86 @@
-#GitHub → Microsoft Entra authentication (OIDC App Registration)
-##Purpose
-This app registration enables secure, secretless authentication from GitHub Actions into Microsoft Entra using OpenID Connect (OIDC).
-It is used to allow GitHub workflows to run Microsoft Graph / Azure commands without client secrets or certificates.
+# GitHub → Microsoft Entra Authentication (OIDC App Registration)
+
+## Purpose
+
+This document describes the Microsoft Entra **App Registration** used to enable
+**secure, secretless authentication** from **GitHub Actions** into Microsoft Entra
+using **OpenID Connect (OIDC)**.
+
+This integration allows GitHub workflows to run Microsoft Graph, Entra, or Azure
+automation without storing client secrets or certificates.
+
 This pattern is required for:
 
-Automating Entra configuration (branding, lifecycle workflows, etc.)
-Running Graph PowerShell or Azure CLI from GitHub Actions
-Aligning with Microsoft Zero Trust and workload identity best practice
+- Automating tenant branding deployment
+- Running Microsoft Graph PowerShell from GitHub Actions
+- Rebuilding Entra Lifecycle Workflows as code
+- Aligning with Zero Trust workload identity best practice
 
+---
 
-##App Registration Overview
+## High-level Design
 
-App name: github-demo-build
-Tenant: <this Entra tenant>
-Authentication type: Federated credentials (OIDC)
-Trust model: GitHub Actions → Microsoft Entra
-Secrets: ❌ None (no client secrets or certs)
+- **Auth model:** Workload identity federation (OIDC)
+- **Identity provider:** GitHub Actions
+- **Trust anchor:** Microsoft Entra App Registration
+- **Secrets:** ❌ None
+- **Token lifetime:** Short-lived, per workflow run
+- **Scope:** Repository- and branch-specific
 
+---
 
-##Federated Credential Configuration
-The app registration uses a Federated credential with the following settings:
-Federated credential scenario
+## App Registration Overview
 
-Scenario: GitHub Actions deploying Azure resources
+| Property | Value |
+|------|------|
+| **Application name** | `github-demo-build` |
+| **Tenant** | This Entra tenant |
+| **Authentication type** | Federated credentials (OIDC) |
+| **Credential storage** | None (no secrets or certificates) |
+| **Intended use** | GitHub Actions automation |
 
-This configures Entra to trust GitHub as an external identity provider for this application.
+This application is **non-interactive** and must not be used for manual sign-in.
 
-GitHub account linkage
+---
 
+## Federated Credential Configuration
 
+### Federated credential scenario
 
+- **Scenario:** `GitHub Actions deploying Azure resources`
 
+This configures Microsoft Entra to trust GitHub as an external OpenID Connect
+identity provider for this application.
 
+---
 
+### GitHub account linkage
 
+The federated credential is strictly scoped to a single repository and branch:
 
+| Field | Value |
+|----|-----|
+| **Organisation** | `allyt-msgit` |
+| **Repository** | `demo-branding` |
+| **Entity type** | `Branch` |
+| **Branch name** | `main` |
+| **Subject identifier repo:allyt-msgit/demo-branding:ref:refs/heads/main
+Only workflows executing from **this repository and branch** are trusted.
 
+---
 
+### Subject identifier (auto-generated)
 
+Microsoft Entra automatically generates and validates the subject identifier
+based on the GitHub OpenID token:
 
+```text
+repo:allys-msgez/demo-branding:ref:refs/heads/main
 
+Cred name - github-oidc
 
 
 
 
 
 
-
-
-
-
-
-
-SettingValueOrganisationallys-msgezRepositorydemo-brandingEntity typeBranchBranch namemain
-This ensures that only workflows running on the main branch of the specified repository are trusted.
-
-Subject identifier (auto-generated)
-The subject identifier is automatically constructed by Entra based on the GitHub inputs:
-Plain Textrepo:allys-msgez/demo-branding:ref:refs/heads/main``Show more lines
-This value is validated against the OIDC token issued by GitHub Actions at runtime.
-
-Credential details
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-FieldValueNamegithub-basicDescriptionused for github access for deploymentAudienceapi://AzureADTokenExchange
-The audience value is required for Entra workload identity federation and must not be changed.
-
-Why OIDC is used (instead of secrets)
-
-No client secrets stored in GitHub
-No certificate rotation
-Tokens are short-lived and issued per workflow run
-Access is tightly scoped to:
-
-One repository
-One branch
-
-
-Fully auditable in Entra sign-in logs
-
-This is the recommended Microsoft pattern for GitHub → Azure / Entra integration.
-
-How this is used in practice
-In GitHub Actions, workflows will:
-
-Request an OIDC token from GitHub
-Exchange it with Microsoft Entra using this app registration
-Obtain an access token for:
-
-Microsoft Graph
-Azure Resource Manager (if required)
-
-
-
-This enables running commands such as:
-
-Microsoft Graph PowerShell
-Azure CLI
-Bicep / ARM deployments
-Entra configuration scripts
-
-All without storing secrets.
-
-Dependencies / prerequisites
-
-App registration exists in Entra
-Federated credential configured as above
-App registration granted appropriate API permissions (e.g. Microsoft Graph)
-GitHub workflow uses OIDC (permissions: id-token: write)
-
-
-Notes
-
-Any change to repository name, organisation, or branch will break authentication until the federated credential is updated.
-Multiple federated credentials can be created if different repos or branches need access.
-This app registration is intended for automation, not interactive use.
