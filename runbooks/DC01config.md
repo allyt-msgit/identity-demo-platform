@@ -110,7 +110,60 @@ demo narratives where required.
 
 Connectivity is intentionally simple and flat to support demo scenarios
 and reduce operational overhead.
+## Networking
 
+The DC01 virtual machine is deployed into the on‑premises demo virtual network and uses
+a combination of subnet‑level security controls and Just‑In‑Time (JIT) access for management.
+
+### IP Addressing
+
+| Type | Value | Notes |
+|----|----|----|
+| **Private IPv4** | `10.10.1.4` | Static assignment within the on‑prem subnet |
+| **Private IPv6** | Not assigned | IPv6 not in use |
+| **Public IPv4 (NAT Gateway)** | `20.13.162.109` | Shared outbound connectivity via NAT gateway |
+| **Public IPv4 (NIC)** | `4.208.91.73` | Direct public IP on network interface |
+| **Public IPv6** | Not assigned | IPv6 not in use |
+
+Two public IPv4 addresses are associated with this VM:
+- One via the **NAT Gateway** (for outbound connectivity)
+- One directly on the **network interface** (used for controlled inbound access)
+
+---
+
+### Virtual Network Configuration
+
+| Setting | Value |
+|----|----|
+| **Virtual network** | `vnet-onprem` |
+| **Subnet** | `onprem (10.10.1.0/24)` |
+| **DNS** | Azure-provided (DNS name not configured) |
+
+The virtual machine shares this VNet and subnet with other demo infrastructure components,
+including identity and application workloads.
+
+---
+
+### Network Security
+
+- The subnet is protected by a **subnet‑level Network Security Group (NSG)**  
+  (`vnet-onprem-onprem-nsg-northeurope`)
+- No per‑NIC NSG is used
+- **Inbound RDP (TCP 3389)** access is controlled via **Just‑In‑Time (JIT)** VM access
+- No permanently open inbound management ports are configured
+
+This design aligns with demo security best practice:
+- Minimal exposed surface area
+- Time‑bound administrative access
+- Centralised network policy at subnet level
+
+---
+
+### Notes
+
+- Public connectivity is retained for demo and management convenience.
+- The network layout is intentionally simple and flat to support
+  rapid demo scenarios rather than production isolation or segmentation.
 ---
 
 ## Diagnostics & Monitoring
