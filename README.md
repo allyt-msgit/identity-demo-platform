@@ -30,6 +30,7 @@ These constraints are deliberate and form part of the demo narrative.
 ---
 
 ## Identity Model
+- **Primary domain hub.proseware.uk** 
 
 - **Primary control plane:** Microsoft Entra ID
 - **Admin model:** Least privilege + Just-In-Time (PIM)
