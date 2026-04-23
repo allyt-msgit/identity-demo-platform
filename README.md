@@ -46,9 +46,12 @@ alturnbu@MngEnvMCAP611031.onmicrosoft.com
 alturnbu@hub.proseware.uk
 ---
 ## Servers config
-- **DC01 - Domain controller 10.10.1.4
-- **APP-WEB-01 - Web server on prem + file share server - 10.10.1.6
-- ** WIN11-USER01 - vm IN AZURE FOR cooper
+- **DC01
+Domain controller 10.10.1.4
+- **APP-WEB-01
+Web server on prem + file share server - 10.10.1.6
+- ** WIN11-USER01
+vm IN AZURE FOR cooper
 
 ## AD domain
 - **MngEnvMCAP611031.onmicrosoft.com
