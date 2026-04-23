@@ -46,11 +46,13 @@ alturnbu@MngEnvMCAP611031.onmicrosoft.com
 alturnbu@hub.proseware.uk
 ---
 ### Servers config
-- **DC01
+- **DC01**
 Domain controller 10.10.1.4
-- **APP-WEB-01
+- **APP-WEB-01**
 Web server on prem + file share server - 10.10.1.6
-- ** WIN11-USER01
+- **GSA01**
+GSA Connect server for private access - 10.10.1.7
+- ** WIN11-USER01**
 vm IN AZURE FOR cooper
 
 ## AD domain
