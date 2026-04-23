@@ -19,11 +19,7 @@ This is **not** a production reference architecture.
 This environment is intentionally constrained to reflect modern security guidance and real-world limitations:
 
 - ✅ Provisioned Microsoft Entra tenant (SFI governed)
-- ❌ No custom DNS domain (onmicrosoft.com only)
-- ❌ Email is not foundational to identity
 - ✅ Cloud‑first identity model
-- ✅ On‑prem Active Directory included for comparison only
-- ❌ No on‑prem high availability (backup-based recovery only)
 
 These constraints are deliberate and form part of the demo narrative.
 
@@ -31,7 +27,6 @@ These constraints are deliberate and form part of the demo narrative.
 
 ## Identity Model
 - **Primary domain hub.proseware.uk** 
-
 - **Primary control plane:** Microsoft Entra ID
 - **Admin model:** Least privilege + Just-In-Time (PIM)
 - **Authentication:** Phishing-resistant MFA, passwordless-first
@@ -48,7 +43,7 @@ admin@MngEnvMCAP611031.onmicrosoft.com
 - **Primary working identity (PIM-elevated)**
 
 alturnbu@MngEnvMCAP611031.onmicrosoft.com
-
+alturnbu@hub.proseware.uk
 ---
 
 ## Repository Structure
