@@ -45,7 +45,7 @@ admin@MngEnvMCAP611031.onmicrosoft.com
 alturnbu@MngEnvMCAP611031.onmicrosoft.com
 alturnbu@hub.proseware.uk
 ---
-## Servers config
+### Servers config
 - **DC01
 Domain controller 10.10.1.4
 - **APP-WEB-01
@@ -56,6 +56,10 @@ vm IN AZURE FOR cooper
 ## AD domain
 - **MngEnvMCAP611031.onmicrosoft.com
 - **Netbios name MCAP611031
+
+### Server settings
+- **All servers DNS should point to DC01 - 10.10.1.4 in order to join domain
+- **Change IP to static in Azure portal + change the dns manually to point to 10.10.1.4 in azure
 ## Repository Structure
 
 ```text
